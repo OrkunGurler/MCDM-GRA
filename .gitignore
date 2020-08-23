@@ -12,6 +12,9 @@
 # Ignore all local history of files
 .history
 
+### R ###
+.RData
+
 ### RStudio ###
 /.Rproj.user
 .Rhistory
