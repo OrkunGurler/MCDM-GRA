@@ -12,6 +12,11 @@
 # Ignore all local history of files
 .history
 
+### RStudio ###
+/.Rproj.user
+.Rhistory
+MCDM-GRA.Rproj
+
 ### Linux ###
 *~
 
@@ -26,11 +31,6 @@
 
 # .nfs files are created when an open file is removed but is still being accessed
 .nfs*
-
-### Redundant Files ###
-/.Rproj.user
-.Rhistory
-MCDM-GRA.Rproj
 
 ### Windows ###
 # Windows thumbnail cache files
