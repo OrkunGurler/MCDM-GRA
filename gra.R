@@ -94,6 +94,6 @@ gra <- function(data, refs, weight = entropy(data), d = 0.5) {
 # gra(d, r, d = D)
 
 ##### SampleData(Economic Freedom of the World(2016))
-d <- read_excel('/home/thiasus/Desktop/Workspace/MCDM-GRA/SampleData/economic-freedom-of-the-world(2016).xlsx', sheet = 'data')
-r <- read_excel('/home/thiasus/Desktop/Workspace/MCDM-GRA/SampleData/economic-freedom-of-the-world(2016).xlsx', sheet = 'refs')
-gra(d, r)
+# d <- read_excel('/home/thiasus/Desktop/Workspace/MCDM-GRA/SampleData/economic-freedom-of-the-world(2016).xlsx', sheet = 'data')
+# r <- read_excel('/home/thiasus/Desktop/Workspace/MCDM-GRA/SampleData/economic-freedom-of-the-world(2016).xlsx', sheet = 'refs')
+# gra(d, r)
