@@ -3,14 +3,16 @@ sprintf('MCDM with GRA')
 library(readxl)
 
 entropy <- function(X) {
+  X[is.na(X)] <- 0
   sumX <- as.matrix(apply(X, 2, sum))
-  
+
   P <- apply(X, 1, function(x) x / sumX)
 
-  CE <- apply(P, 1, function(x) ((-1) / log(nrow(P))) * x * log(x))
-  
+  CE <- apply(P, 1, function(x)((-1) / log(nrow(P))) * x * log(x))
+  CE[is.na(CE)] <- 0
+
   E <- apply(CE, 2, sum)
-  
+
   D <- abs(1 - E)
   sumD <- sum(D)
 
@@ -24,7 +26,8 @@ gra <- function(data, refs, weight = entropy(data), d = 0.5) {
   ##### Preparing the Decision Matrix
   # X -> Data Matrix
   X <- data
-  rnX <- rownames(X)
+  X[is.na(X)] <- 0
+  rnX <- rownames(X) # For plot
   mxX <- as.matrix(apply(X, 2, max)) # columns max value
   mnX <- as.matrix(apply(X, 2, min)) # columns max value
 
@@ -32,8 +35,7 @@ gra <- function(data, refs, weight = entropy(data), d = 0.5) {
   R <- as.matrix(refs)
 
   # RS -> Reference Series Vector
-  RS <- as.vector(sapply(X[, 1:ncol(X)], function(x) ifelse(R == 'B', mxX, mnX)))
-  names(RS) <- colnames(X)
+  RS <- as.vector(sapply(X[, ncol(X)], function(x) ifelse(R == 'B', mxX, mnX)))
 
   ##### Adding Up Reference Series
   X <- rbind(RS, X)
@@ -65,6 +67,7 @@ gra <- function(data, refs, weight = entropy(data), d = 0.5) {
   ##### Calculate the Grey Relational Degree
   # W -> Weight Vector
   W <- as.matrix(weight)
+
   WC <- apply(C, 2, function(x) W * x)
 
   # D -> Grey Relational Degree
@@ -75,13 +78,22 @@ gra <- function(data, refs, weight = entropy(data), d = 0.5) {
   colnames(D) <- c('GRD')
   D <- as.matrix(apply(D, 2, function(x) sort(x, decreasing = TRUE)))
 
-  barplot(as.vector(D), main = "Grey Relational Degree", xlab = "Alternatives", ylab = "Degrees", names.arg = rownames(D), border = "darkgrey", density = c(nrow(D):1))
+  barplot(as.vector(D), main = "Grey Relational Degree", xlab = "Alternatives", ylab = "Degrees", names.arg = rownames(D), border = "darkgrey", density = 1)
 }
 
 ##### SampleData(Optimum Lastik Seçimi)
-d <- read_excel('/home/thiasus/Desktop/Workspace/MCDM-GRA/SampleData/optimum-lastik-secimi.xlsx', sheet = 'data')
-r <- read_excel('/home/thiasus/Desktop/Workspace/MCDM-GRA/SampleData/optimum-lastik-secimi.xlsx', sheet = 'refs')
-w <- read_excel('/home/thiasus/Desktop/Workspace/MCDM-GRA/SampleData/optimum-lastik-secimi.xlsx', sheet = 'weight')
-D <- 0.25
+# d <- read_excel('/home/thiasus/Desktop/Workspace/MCDM-GRA/SampleData/optimum-lastik-secimi.xlsx', sheet = 'data')
+# r <- read_excel('/home/thiasus/Desktop/Workspace/MCDM-GRA/SampleData/optimum-lastik-secimi.xlsx', sheet = 'refs')
+# w <- read_excel('/home/thiasus/Desktop/Workspace/MCDM-GRA/SampleData/optimum-lastik-secimi.xlsx', sheet = 'weight')
+# gra(d, r, w)
 
-gra(data = d, refs = r, weight = w, d = D)
+##### SampleData(Optimum Lastik Seçimi - Ağırlıksız)
+# d <- read_excel('/home/thiasus/Desktop/Workspace/MCDM-GRA/SampleData/optimum-lastik-secimi.xlsx', sheet = 'data')
+# r <- read_excel('/home/thiasus/Desktop/Workspace/MCDM-GRA/SampleData/optimum-lastik-secimi.xlsx', sheet = 'refs')
+# D <- 0.1
+# gra(d, r, d = D)
+
+##### SampleData(Economic Freedom of the World(2016))
+d <- read_excel('/home/thiasus/Desktop/Workspace/MCDM-GRA/SampleData/economic-freedom-of-the-world(2016).xlsx', sheet = 'data')
+r <- read_excel('/home/thiasus/Desktop/Workspace/MCDM-GRA/SampleData/economic-freedom-of-the-world(2016).xlsx', sheet = 'refs')
+gra(d, r)
