@@ -1,15 +1,15 @@
-sprintf('MCDM with GRA')
+########## MCDM with GRA ##########
 
+# install.packages(readxl)
 library(readxl)
 
 entropy <- function(X) {
-  X[is.na(X)] <- 0
   sumX <- as.matrix(apply(X, 2, sum))
 
   P <- apply(X, 1, function(x) x / sumX)
 
   CE <- apply(P, 1, function(x)((-1) / log(nrow(P))) * x * log(x))
-  CE[is.na(CE)] <- 0
+  CE[is.na(CE)] <- 0 # **assign 0 for NA (-inf, inf) values**
 
   E <- apply(CE, 2, sum)
 
@@ -22,27 +22,55 @@ entropy <- function(X) {
 }
 
 # d -> Distinguishing Coefficient Value, range -> (0, 1), default -> 0.5
-gra <- function(data, refs, weight = entropy(data), d = 0.5) {
+gra <- function(data, refs, weight = vector(), d = 0.5) {
   ##### Preparing the Decision Matrix
   # X -> Data Matrix
   X <- data
-  X[is.na(X)] <- 0
-  rnX <- rownames(X) # For plot
-  mxX <- as.matrix(apply(X, 2, max)) # columns max value
-  mnX <- as.matrix(apply(X, 2, min)) # columns max value
 
+  # rnX -> For plotting
+  rnX <- rownames(X)
+
+  ##### Assign mean of columns for NA values
+  X <- as.matrix(sapply(X, function(x) ifelse(is.na(x), mean(x, na.rm = TRUE), x)))
+  
+  # columns max value
+  mxX <- apply(X, 2, max)
+  # columns min value
+  mnX <- apply(X, 2, min)
+
+  ##### Check or Calculate Weight
+  if (all(is.na(weight))) {
+    weight <- entropy(X)
+  } else if (any(is.na(weight))) {
+    print('Weight Vector\'s has NA\'s in it. Would you like to use entropy?')
+    input <- readline(prompt = 'Y/N')
+    if (input == 'Y' | input == 'y') {
+      weight <- entropy(X)
+    } else {
+      stop('Process stopped by user.')
+    }
+  } else if (sum(weight) != 1) {
+    print('Weight Vector\'s sum is not equal to 1. Would you like to use entropy?')
+    input <- readline(prompt = 'Y/N')
+    if (input == 'Y' | input == 'y') {
+      weight <- entropy(X)
+    } else {
+      stop('Process stopped by user.')
+    }
+  }
+  
   # R -> Reference Vector
   R <- as.matrix(refs)
 
   # RS -> Reference Series Vector
-  RS <- as.vector(sapply(X[, ncol(X)], function(x) ifelse(R == 'B', mxX, mnX)))
+  RS <- as.vector(sapply(X[1,1], function(x) ifelse(R == 'B', mxX, mnX)))
 
   ##### Adding Up Reference Series
   X <- rbind(RS, X)
 
   ##### Preparing Comparison Series and Normalizing Data
   # NX -> Normalized Data Matrix
-  # NX <- apply(X, 2, function(x) ifelse(R == 'B',(x - mnX) / (mxX - mnX), (mxX - x) / (mxX - mnX)))
+  # NX <- apply(X, 2, function(x) ifelse(R == 'B',(x - mnX) / (mxX - mnX), (mxX - x) / (mxX - mnX))) ** ? **
   NX <- X
   for (c in 1:ncol(X)) {
     for (r in 1:nrow(X)) {
