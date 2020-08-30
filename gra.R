@@ -108,20 +108,3 @@ gra <- function(data, refs, weight = vector(), d = 0.5) {
 
   barplot(as.vector(D), main = "Grey Relational Degree", xlab = "Alternatives", ylab = "Degrees", names.arg = rownames(D), border = "darkgrey", density = 1)
 }
-
-##### SampleData(Optimum Lastik Seçimi)
-# d <- read_excel('/home/thiasus/Desktop/Workspace/MCDM-GRA/SampleData/optimum-lastik-secimi.xlsx', sheet = 'data')
-# r <- read_excel('/home/thiasus/Desktop/Workspace/MCDM-GRA/SampleData/optimum-lastik-secimi.xlsx', sheet = 'refs')
-# w <- read_excel('/home/thiasus/Desktop/Workspace/MCDM-GRA/SampleData/optimum-lastik-secimi.xlsx', sheet = 'weight')
-# gra(d, r, w)
-
-##### SampleData(Optimum Lastik Seçimi - Ağırlıksız)
-# d <- read_excel('/home/thiasus/Desktop/Workspace/MCDM-GRA/SampleData/optimum-lastik-secimi.xlsx', sheet = 'data')
-# r <- read_excel('/home/thiasus/Desktop/Workspace/MCDM-GRA/SampleData/optimum-lastik-secimi.xlsx', sheet = 'refs')
-# D <- 0.1
-# gra(d, r, d = D)
-
-##### SampleData(Economic Freedom of the World(2016))
-# d <- read_excel('/home/thiasus/Desktop/Workspace/MCDM-GRA/SampleData/economic-freedom-of-the-world(2016).xlsx', sheet = 'data')
-# r <- read_excel('/home/thiasus/Desktop/Workspace/MCDM-GRA/SampleData/economic-freedom-of-the-world(2016).xlsx', sheet = 'refs')
-# gra(d, r)
